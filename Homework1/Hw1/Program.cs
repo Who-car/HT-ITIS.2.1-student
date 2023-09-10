@@ -1,7 +1,12 @@
-﻿var arg1 = args[0];
-var operation = args[1];
-var arg2 = args[2];
+﻿namespace Hw1;
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Parser.ParseCalcArguments(args, out var arg1, out var operation, out var arg2);
 
-// TODO: implement calculator logic
-var result = arg1 + operation + arg2;
-Console.WriteLine(result);
+        // TODO: implement calculator logic
+        var result = Calculator.Calculate(arg1, operation, arg2);
+        Console.WriteLine(result);
+    }
+}
