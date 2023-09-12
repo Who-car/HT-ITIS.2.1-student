@@ -5,7 +5,6 @@ public class Program
     {
         Parser.ParseCalcArguments(args, out var arg1, out var operation, out var arg2);
 
-        // TODO: implement calculator logic
         var result = Calculator.Calculate(arg1, operation, arg2);
         Console.WriteLine(result);
     }
