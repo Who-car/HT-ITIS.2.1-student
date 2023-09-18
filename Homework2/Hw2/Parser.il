@@ -91,8 +91,9 @@
         br Success
 
         Undefined:
-        ldc.i4 4
-        br Success
+        ldstr "Операция не распознана. Пожалуйста вводите только одну из операций +, -, *, /"
+        newobj instance void [mscorlib] System.InvalidOperationException::.ctor(string)
+        throw
 
         Success:
         ret

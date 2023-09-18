@@ -54,7 +54,7 @@
         
         Fail:
         ldstr "Операция не распознана. Пожалуйста вводите только одну из операций +, -, *, /"
-        newobj instance void [mscorlib] System.InvalidOperationException::.ctor(string)
+        newobj instance void [mscorlib] System.ArgumentOutOfRangeException::.ctor(string)
         throw
         
         Success:
