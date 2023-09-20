@@ -29,7 +29,7 @@ public class CalculatorTests
     }
 
     [Homework(Homeworks.HomeWork2)]
-    public void TestDividingNonZeroByZero()
+    public void TestDividingZeroByNonZero()
     {
         //act
         var actual = Calculator.Calculate(0, CalculatorOperation.Divide, 10);
@@ -39,7 +39,7 @@ public class CalculatorTests
     }
 
     [Homework(Homeworks.HomeWork2)]
-    public void TestDividingZeroByNonZero()
+    public void TestDividingNonZeroByZero()
     {
         //act
         var actual = Calculator.Calculate(10, CalculatorOperation.Divide, 0);
