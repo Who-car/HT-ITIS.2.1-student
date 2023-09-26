@@ -16,15 +16,44 @@ public class SingleInitializationSingleton
 
     public int Delay { get; }
 
-    public static SingleInitializationSingleton Instance => throw new NotImplementedException();
+    private static SingleInitializationSingleton _instance;
+
+    public static SingleInitializationSingleton Instance
+    {
+        get
+        {
+            lock (Locker)
+            {
+                if (!_isInitialized)
+                    lock (Locker)
+                    {
+                        _instance = new SingleInitializationSingleton();
+                        _isInitialized = true;
+                    }
+                return _instance;
+            }
+        }
+    }
 
     internal static void Reset()
     {
-        throw new NotImplementedException();
+        lock (Locker)
+        {
+            _instance = new SingleInitializationSingleton();
+            _isInitialized = false;
+        }
     }
 
     public static void Initialize(int delay)
     {
-        throw new NotImplementedException();
+        lock (Locker)
+        {
+            if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации");
+            lock (Locker)
+            {
+                _instance = new SingleInitializationSingleton(delay); 
+                _isInitialized = true;
+            }
+        }
     }
 }
