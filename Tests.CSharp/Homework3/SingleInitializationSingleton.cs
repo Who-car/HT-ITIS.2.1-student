@@ -31,11 +31,14 @@ public class SingleInitializationSingleton
     {
         lock (Locker)
         {
-            if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации"); 
-        
-            _instance = new Lazy<SingleInitializationSingleton>
-                (() => new SingleInitializationSingleton(delay), true); 
-            _isInitialized = true;
+            if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации");
+
+            lock (Locker)
+            {
+                _instance = new Lazy<SingleInitializationSingleton>
+                    (() => new SingleInitializationSingleton(delay), true); 
+                _isInitialized = true;
+            }
         }
     }
 }
