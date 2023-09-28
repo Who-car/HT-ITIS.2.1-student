@@ -29,10 +29,13 @@ public class SingleInitializationSingleton
     
     public static void Initialize(int delay)
     {
-        if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации"); 
+        lock (Locker)
+        {
+            if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации"); 
         
-        _instance = new Lazy<SingleInitializationSingleton>
-            (() => new SingleInitializationSingleton(delay), true); 
-        _isInitialized = true;
+            _instance = new Lazy<SingleInitializationSingleton>
+                (() => new SingleInitializationSingleton(delay), true); 
+            _isInitialized = true;
+        }
     }
 }
