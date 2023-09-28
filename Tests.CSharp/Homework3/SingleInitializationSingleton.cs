@@ -22,23 +22,26 @@ public class SingleInitializationSingleton
     
     internal static void Reset()
     {
-        _instance = new Lazy<SingleInitializationSingleton>
-            (() => new SingleInitializationSingleton(), true);
-        _isInitialized = false;
+        if (!_isInitialized) return;
+        lock (Locker)
+        {
+            if (!_isInitialized) return;
+            _instance = new Lazy<SingleInitializationSingleton>
+                (() => new SingleInitializationSingleton(), true);
+            _isInitialized = false;
+        }
     }
     
     public static void Initialize(int delay)
     {
+        if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации");
+
         lock (Locker)
         {
             if (_isInitialized) throw new InvalidOperationException("Попытка двойной инициализации");
-
-            lock (Locker)
-            {
-                _instance = new Lazy<SingleInitializationSingleton>
-                    (() => new SingleInitializationSingleton(delay), true); 
-                _isInitialized = true;
-            }
+            _instance = new Lazy<SingleInitializationSingleton>
+                (() => new SingleInitializationSingleton(delay), true); 
+            _isInitialized = true;
         }
     }
 }
