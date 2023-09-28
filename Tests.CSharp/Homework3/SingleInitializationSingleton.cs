@@ -22,10 +22,8 @@ public class SingleInitializationSingleton
     
     internal static void Reset()
     {
-        if (!_isInitialized) return;
         lock (Locker)
         {
-            if (!_isInitialized) return;
             _instance = new Lazy<SingleInitializationSingleton>
                 (() => new SingleInitializationSingleton(), true);
             _isInitialized = false;
