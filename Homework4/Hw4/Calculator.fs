@@ -15,5 +15,4 @@ let calculate (value1 : float) (operation : CalculatorOperation) (value2 : float
     | CalculatorOperation.Minus -> value1 - value2
     | CalculatorOperation.Multiply -> value1 * value2
     | CalculatorOperation.Divide -> value1 / value2
-    | CalculatorOperation.Undefined ->
-        InvalidOperationException "Нераспознанная операция. Пожалуйста, вводите одну из операций +, -, *, /" |> raise
+    | _ -> InvalidOperationException "Нераспознанная операция. Пожалуйста, вводите одну из операций +, -, *, /" |> raise
