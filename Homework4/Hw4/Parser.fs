@@ -3,7 +3,6 @@
 open System
 open Hw4.Calculator
 
-
 type CalcOptions = {
     arg1: float
     arg2: float
@@ -11,10 +10,25 @@ type CalcOptions = {
 }
 
 let isArgLengthSupported (args : string[]) =
-    NotImplementedException() |> raise
+    args.Length = 3
 
 let parseOperation (arg : string) =
-    NotImplementedException() |> raise
+    match arg with
+    | "+" -> CalculatorOperation.Plus
+    | "-" -> CalculatorOperation.Minus
+    | "*" -> CalculatorOperation.Multiply
+    | "/" -> CalculatorOperation.Divide
+    | _ -> InvalidOperationException "Операция не распознана. Вводите только +, -, *, /" |> raise
+    
+let parseNum (arg: string) =
+    match Double.TryParse(arg) with
+    | true, result -> result
+    | _ -> ArgumentException "Пожалуйста используйте только цифры" |> raise
     
 let parseCalcArguments(args : string[]) =
-    NotImplementedException() |> raise
+    if isArgLengthSupported args then {
+        arg1 = parseNum args[0]
+        operation =  parseOperation args[1]
+        arg2 = parseNum args[2]
+    }
+    else ArgumentException "Неверное количество аргументов. Введите число, одну из операций +, -, *, /, число" |> raise
