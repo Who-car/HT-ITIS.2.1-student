@@ -21,10 +21,9 @@ let parseOperation (arg : string) =
     | _ -> InvalidOperationException "Операция не распознана. Вводите только +, -, *, /" |> raise
     
 let parseNum (arg: string) =
-    let mutable result = 0.0
-    if Double.TryParse(arg, &result) then result
-    else ArgumentException "Пожалуйста используйте только цифры" |> raise
-        
+    match Double.TryParse(arg) with
+    | true, result -> result
+    | _ -> ArgumentException "Пожалуйста используйте только цифры" |> raise
     
 let parseCalcArguments(args : string[]) =
     if isArgLengthSupported args then {
