@@ -20,11 +20,10 @@ let parseNum (arg: string) =
     | true, result -> Ok result
     | _ -> Error Message.WrongArgFormat
 
-let parseArgs (args: string[]): Result<(double * CalculatorOperation * double), Message> =
+let parseArgs (arg1: string, operation: string, arg2: string): Result<(double * CalculatorOperation * double), Message>=
     MaybeBuilder.maybe {
-        let! arg1, op, arg2 = isArgLengthSupported args
         let! value1 = parseNum arg1
-        let! operation = isOperationSupported op
+        let! operation = isOperationSupported operation
         let! value2 = parseNum arg2
         return (value1, operation, value2)
     }
@@ -35,8 +34,9 @@ let inline isDividingByZero (arg1, operation, arg2): Result<(double * Calculator
     then Error Message.DivideByZero
     else Ok (arg1, operation, arg2)
     
-let parseCalcArguments (args: string[]): Result<('a * CalculatorOperation * 'b), Message> =
+let parseCalcArguments (args: string[]): Result<(double * CalculatorOperation * double), Message> =
     MaybeBuilder.maybe {
+        let! args = isArgLengthSupported args
         let! args = parseArgs args
         let! args = isDividingByZero args
         return args
