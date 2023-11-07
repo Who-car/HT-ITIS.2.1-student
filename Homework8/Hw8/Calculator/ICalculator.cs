@@ -8,5 +8,7 @@ public interface ICalculator
     
     double Multiply(double val1, double val2);
     
-    double Divide(double firstValue, double secondValue);
+    double Divide(double val1, double val2);
+
+    double Calculate(string val1, string operation, string val2);
 }
