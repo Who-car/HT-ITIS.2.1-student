@@ -12,36 +12,47 @@ public class ParallelEvaluationVisitor : ExpressionVisitor
     
     protected override Expression VisitBinary(BinaryExpression node)
     {
-        return Expression.Constant(VisitBinaryAsync(node).Result);
+        try
+        {
+            return VisitBinaryAsync(node).Result;
+        }
+        catch (AggregateException e)
+        {
+            throw e.InnerException;
+        }
     }
 
     private async Task<Expression> VisitBinaryAsync(BinaryExpression node)
     {
-        var firstTask = new Lazy<Task<ConstantExpression>>(async () =>
+        var firstTask = new Lazy<Task<Expression>>(async () =>
         {
             await Task.Delay(1000);
             if (node.Left is BinaryExpression binaryLeft)
-                return Expression.Constant(await VisitBinaryAsync(binaryLeft));
-            return Expression.Constant(node.Left);
+                return await VisitBinaryAsync(binaryLeft);
+            return node.Left;
         });
-        var secondTask = new Lazy<Task<ConstantExpression>>(async () =>
+        var secondTask = new Lazy<Task<Expression>>(async () =>
         {
             await Task.Delay(1000);
             if (node.Right is BinaryExpression binaryLeft)
-                return Expression.Constant(await VisitBinaryAsync(binaryLeft));
-            return Expression.Constant(node.Right);
+                return await VisitBinaryAsync(binaryLeft);
+            return node.Right;
         });
 
         var result = await Task.WhenAll(firstTask.Value, secondTask.Value);
+
+        if (node.NodeType == ExpressionType.Divide)
+        {
+            if (Expression.Lambda<Func<double>>(result[1]).Compile().Invoke() == 0)
+                throw new Exception(MathErrorMessager.DivisionByZero);
+        }
 
         return node.NodeType switch
         {
             ExpressionType.Add => Expression.Add(result[0], result[1]),
             ExpressionType.Subtract => Expression.Subtract(result[0], result[1]),
             ExpressionType.Multiply => Expression.Multiply(result[0], result[1]),
-            ExpressionType.Divide => result[1].Value!.Equals(0) 
-                ? throw new Exception(MathErrorMessager.DivisionByZero) 
-                : Expression.Divide(result[0], result[1]),
+            ExpressionType.Divide => Expression.Divide(result[0], result[1]),
             _ => throw new InvalidOperationException("Operation not supported")
         };
     }

@@ -10,8 +10,6 @@ public static class MathParserService
         var expressionTransformed = ConvertToPolakNotation(expression);
         var operations = new Stack<Expression>();
         
-        Console.WriteLine(string.Join(" ", expressionTransformed));
-        
         foreach (var s in expressionTransformed)
         {
             if (Regex.IsMatch(s, @"^-?\d+(\.\d+)?$"))
