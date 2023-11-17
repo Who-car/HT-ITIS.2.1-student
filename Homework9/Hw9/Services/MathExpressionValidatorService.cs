@@ -11,7 +11,7 @@ public static class MathExpressionValidatorService
     {
         if (string.IsNullOrEmpty(expression))
             throw new Exception(MathErrorMessager.EmptyString);
-        if (Operations.Contains($"{expression[0]}"))
+        if (!expression.StartsWith('-') && Operations.Contains($"{expression[0]}"))
             throw new Exception(MathErrorMessager.StartingWithOperation);
         if (Operations.Contains($"{expression[^1]}"))
             throw new Exception(MathErrorMessager.EndingWithOperation);
@@ -20,8 +20,6 @@ public static class MathExpressionValidatorService
         
         var symbols = expression.Split(" ");
         var prev = string.Empty;
-        
-        Console.WriteLine(symbols);
         
         foreach (var s in symbols)
         {
